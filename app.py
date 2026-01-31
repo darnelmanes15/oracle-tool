@@ -17,8 +17,20 @@ with st.sidebar:
         api_key = st.secrets["GOOGLE_API_KEY"]
         st.success("Authentication: System Key ✅")
     else:
-        # If running locally or no secret found, ask the user
+        # If no key in the safe, ask the user
         api_key = st.text_input("Google API Key", type="password")
+        
+    # File Uploader (Accepts multiple PDFs) -> I added this back!
+    uploaded_files = st.file_uploader(
+        "Upload Manuals (PDF)", 
+        type="pdf", 
+        accept_multiple_files=True
+    )
+    
+    if api_key:
+        genai.configure(api_key=api_key)
+    else:
+        st.warning("Please enter your API Key to start.")
 
 # --- 3. Chat Logic ---
 # Initialize chat history in memory
