@@ -12,21 +12,13 @@ st.markdown("Ask me anything about your uploaded manuals.")
 with st.sidebar:
     st.header("⚙️ Configuration")
     
-    # Securely ask for the API Key (so you don't paste it in code)
-    api_key = st.text_input("Google API Key", type="password")
-    
-    # File Uploader (Accepts multiple PDFs)
-    uploaded_files = st.file_uploader(
-        "Upload Manuals (PDF)", 
-        type="pdf", 
-        accept_multiple_files=True
-    )
-    
-    if api_key:
-        genai.configure(api_key=api_key)
-        st.success("API Connected! ✅")
+    # Check if the key is in Streamlit Secrets (The Cloud Vault)
+    if "GOOGLE_API_KEY" in st.secrets:
+        api_key = st.secrets["GOOGLE_API_KEY"]
+        st.success("Authentication: System Key ✅")
     else:
-        st.warning("Please enter your API Key to start.")
+        # If running locally or no secret found, ask the user
+        api_key = st.text_input("Google API Key", type="password")
 
 # --- 3. Chat Logic ---
 # Initialize chat history in memory
